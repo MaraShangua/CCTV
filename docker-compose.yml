@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:8
+    container_name: cctv-mysql
+    environment:
+      MYSQL_DATABASE: cctv_db
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  backend:
+    build: src/main/java/com/example/cctv
+    container_name: cctv-backend
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cctv_db?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql-data:
